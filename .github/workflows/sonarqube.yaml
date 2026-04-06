@@ -26,7 +26,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         with:
           args: >
-            -Dsonar.projectKey=YOUR_PROJECT_KEY
-            -Dsonar.organization=YOUR_ORG
+            -Dsonar.projectKey=PBSable_May2022
+            -Dsonar.organization=PBSable
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
