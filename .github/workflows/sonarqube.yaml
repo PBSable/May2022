@@ -1,0 +1,43 @@
+name: SonarQube Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+
+      - name: Build Project
+        run: mvn clean verify
+
+      - name: Run SonarQube Scan
+        run: mvn sonar:sonar \
+          -Dsonar.projectKey=vulnerable-project \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      - name: Upload SonarQube Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: sonar-report
+          path: target/sonar/report-task.txt
+        
